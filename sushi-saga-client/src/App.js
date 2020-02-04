@@ -12,34 +12,58 @@ class App extends Component {
       sushiData: null,
       count1: 0,
       count2: 4,
-      loaded: false
+      loaded: false,
+      amountRemaining: 105.01
     }
   }
 
   sushiData = () => {
     fetch(API)
       .then(resp => resp.json())
-      .then(json => this.sliceSushiSet(json))
-  }
-
-  setSushiData = (json) => {
-    this.setState({
-      sushiData: json,
-      loaded: true
-    })
+      .then(sushi => {
+        const newSush = sushi.map(sushi => {
+          return {...sushi, isEaten: false}
+        })
+        this.sliceSushiSet(newSush)
+      })
   }
 
   sliceSushiSet = (json) => {
-    // 0-4
     let jboy = json.slice(this.state.count1, this.state.count2)
-    let first = this.state.count2
-    this.setState({
+    this.setState( prevState => ({
       sushiData: jboy,
-      count1: first,
-      count2: jboy + 4,
+      count1: prevState.count2,
+      count2: prevState.count2 + 4,
       loaded: true
-    })
+      })
+    )
   }
+
+  toggleMoreSushi = () => {
+    this.sushiData()
+  }
+
+  handleEaten = (id) => {
+    // console.log(id)
+    this.setState(prevState => {
+      let num = 0
+      const updatedSushi = prevState.sushiData.map(sushi => {
+        if (sushi.id === id){
+          num = sushi.price
+          return { ...sushi, isEaten: true}
+        } else {
+          return sushi
+        }
+      })
+      return {
+        sushiData: updatedSushi,
+        amountRemaining: prevState.amountRemaining - num
+      }
+    })
+    
+  }
+
+
 
 
   componentDidMount(){
@@ -49,8 +73,18 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        <SushiContainer sushiData= { this.state.sushiData } loaded= {this.state.loaded} />
-        <Table />
+        <SushiContainer 
+          sushiData= { this.state.sushiData } 
+          loaded= { this.state.loaded }
+          toggleMoreSushi= { this.toggleMoreSushi }
+          sushiDisplay= { this.state.sushiDisplay }
+          handleEaten = { this.handleEaten }
+        />
+        <Table 
+          amountRemaining= {this.state.amountRemaining } 
+          loaded= {this.state.loaded} 
+
+        />
       </div>
     );
   }

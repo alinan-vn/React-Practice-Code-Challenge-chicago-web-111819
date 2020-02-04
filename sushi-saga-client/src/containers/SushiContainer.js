@@ -6,18 +6,20 @@ import Sushi from '../components/Sushi'
 const SushiContainer = (props) => {
 
   const renderSushi = () => {
-    console.log(props.sushiData)
+    // console.log(props.sushiData)
     return props.sushiData.map(sush => {
-      console.log(sush)
-      return <Sushi singleSushi= { sush } />
+      // console.log(sush)
+      return <Sushi singleSushi= { sush } handleEaten= {props.handleEaten } />
     })
   }
 
   return (
     <Fragment>
       <div className="belt">
-        {props.loaded ? renderSushi() : console.log('has not loaded')}
-        <MoreButton />
+        {/* {props.loaded ? console.log(props) : null} */}
+        
+        {props.loaded ? renderSushi() : null}
+        <MoreButton toggleMoreSushi={ props.toggleMoreSushi }/>
       </div>
     </Fragment>
   )

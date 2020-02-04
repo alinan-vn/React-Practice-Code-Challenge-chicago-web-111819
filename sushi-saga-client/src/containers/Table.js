@@ -10,8 +10,9 @@ const Table = (props) => {
 
   return (
     <Fragment>
+      {/* {console.log('table', props)} */}
       <h1 className="remaining">
-        You have: ${ /* Give me how much money I have left */ } remaining!
+        You have: ${ props.loaded ? props.amountRemaining : null } remaining!
       </h1>
       <div className="table">
         <div className="stack">
